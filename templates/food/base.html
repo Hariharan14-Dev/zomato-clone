@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Zomato Clone{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Okra:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--red:#e23744;--dark-red:#c9303e;--orange:#ff6b35;--bg:#f8f8f8;--white:#fff;--gray:#93959f;--dark:#1c1c1c;--border:#e8e8e8;--shadow:0 2px 16px rgba(0,0,0,.08);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);}
+.navbar{background:var(--white);box-shadow:0 1px 8px rgba(0,0,0,.08);padding:12px 0;position:sticky;top:0;z-index:100;}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Okra',sans-serif;font-size:24px;font-weight:700;color:var(--red);text-decoration:none;display:flex;align-items:center;gap:6px;}
+.logo span{font-size:20px;}
+.nav-links{display:flex;align-items:center;gap:20px;}
+.nav-links a{color:var(--dark);text-decoration:none;font-size:14px;font-weight:500;transition:.2s;}
+.nav-links a:hover{color:var(--red);}
+.btn{padding:8px 20px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:.2s;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--dark-red);}
+.btn-outline{border:2px solid var(--red);color:var(--red);background:transparent;}
+.btn-outline:hover{background:var(--red);color:#fff;}
+.container{max-width:1200px;margin:0 auto;padding:0 20px;}
+.messages{list-style:none;margin:10px auto;max-width:1200px;padding:0 20px;}
+.messages li{padding:10px 16px;border-radius:8px;margin-bottom:8px;font-size:14px;}
+.messages li.error{background:#fde8ea;color:#c0392b;border:1px solid #f5c6c9;}
+.messages li.success{background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;}
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+{% if user.is_authenticated %}
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="logo"><span>🍕</span> Zomato</a>
+    <div class="nav-links">
+      <a href="/"><i class="fas fa-home"></i> Home</a>
+      <a href="/cart/"><i class="fas fa-shopping-cart"></i> Cart</a>
+      <a href="/my-orders/"><i class="fas fa-list"></i> Orders</a>
+      <span style="color:var(--gray);font-size:14px;">Hi, {{ user.username }}</span>
+      <a href="/logout/" class="btn btn-outline">Logout</a>
+    </div>
+  </div>
+</nav>
+{% endif %}
+{% if messages %}
+<ul class="messages">
+  {% for msg in messages %}<li class="{{ msg.tags }}">{{ msg }}</li>{% endfor %}
+</ul>
+{% endif %}
+{% block content %}{% endblock %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>

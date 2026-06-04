@@ -1,0 +1,54 @@
+{% extends 'food/base.html' %}
+{% block title %}Login - Zomato{% endblock %}
+{% block extra_css %}
+<style>
+.auth-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff5f5 0%,#fff 50%,#fff5f5 100%);}
+.auth-card{background:#fff;border-radius:20px;box-shadow:0 8px 40px rgba(226,55,68,.1);overflow:hidden;width:420px;max-width:95vw;}
+.auth-header{background:var(--red);padding:32px;text-align:center;}
+.auth-header .logo{font-family:'Okra',sans-serif;font-size:32px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;}
+.auth-header p{color:rgba(255,255,255,.85);margin-top:8px;font-size:14px;}
+.auth-body{padding:32px;}
+.form-group{margin-bottom:20px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;}
+.form-group input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:15px;outline:none;transition:.2s;}
+.form-group input:focus{border-color:var(--red);}
+.form-submit{width:100%;padding:14px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;}
+.form-submit:hover{background:var(--dark-red);transform:translateY(-1px);}
+.auth-footer{text-align:center;margin-top:20px;font-size:14px;color:var(--gray);}
+.auth-footer a{color:var(--red);font-weight:600;text-decoration:none;}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.divider span{font-size:12px;color:var(--gray);}
+.social-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.social-btn{padding:10px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;}
+.social-btn:hover{border-color:#ccc;background:#f8f8f8;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <a class="logo" href="#"><span>🍕</span> Zomato</a>
+      <p>Discover great food near you</p>
+    </div>
+    <div class="auth-body">
+      {% if messages %}{% for msg in messages %}<div style="background:#fde8ea;color:#c0392b;padding:10px;border-radius:8px;margin-bottom:16px;font-size:13px;">{{ msg }}</div>{% endfor %}{% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="Enter your username" required autofocus>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="form-submit">Login to Zomato</button>
+      </form>
+      <div class="auth-footer" style="margin-top:16px;">
+        Don't have an account? <a href="/register/">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

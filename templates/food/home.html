@@ -1,0 +1,101 @@
+{% extends 'food/base.html' %}
+{% block title %}Order Food Online - Zomato{% endblock %}
+{% block extra_css %}
+<style>
+.hero{background:linear-gradient(135deg,#e23744,#ff6b35);padding:50px 0;text-align:center;}
+.hero h1{font-family:'Okra',sans-serif;font-size:42px;font-weight:800;color:#fff;margin-bottom:10px;}
+.hero p{color:rgba(255,255,255,.9);font-size:18px;margin-bottom:28px;}
+.search-bar{display:flex;max-width:560px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.15);}
+.search-bar input{flex:1;padding:16px 20px;border:none;font-size:15px;outline:none;}
+.search-bar button{padding:16px 28px;background:var(--red);color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;}
+.filters{padding:20px 0;display:flex;gap:10px;flex-wrap:wrap;}
+.filter-chip{padding:8px 18px;border-radius:20px;border:2px solid var(--border);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;}
+.filter-chip:hover,.filter-chip.active{border-color:var(--red);color:var(--red);background:#fff5f5;}
+.section-title{font-family:'Okra',sans-serif;font-size:22px;font-weight:700;margin:24px 0 16px;}
+.restaurants-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding-bottom:40px;}
+.restaurant-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:.25s;cursor:pointer;text-decoration:none;color:inherit;}
+.restaurant-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.12);}
+.card-img{width:100%;height:180px;object-fit:cover;background:linear-gradient(135deg,#ff9a9e,#fecfef);}
+.card-img-placeholder{width:100%;height:180px;display:flex;align-items:center;justify-content:center;font-size:60px;background:linear-gradient(135deg,#ff9a9e,#fecfef);}
+.card-body{padding:16px;}
+.card-name{font-family:'Okra',sans-serif;font-size:17px;font-weight:700;margin-bottom:4px;}
+.card-cuisine{font-size:13px;color:var(--gray);margin-bottom:10px;}
+.card-meta{display:flex;gap:16px;font-size:13px;}
+.meta-badge{display:flex;align-items:center;gap:4px;font-weight:600;}
+.meta-badge.rating{color:#1a9c3e;}
+.meta-badge.time{color:#555;}
+.meta-badge.price{color:#555;}
+.closed-badge{background:#f0f0f0;color:#999;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:8px;display:inline-block;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="hero">
+  <h1>🍕 Order Food Online</h1>
+  <p>Discover restaurants, track orders in real-time</p>
+  <div class="search-bar">
+    <input type="text" placeholder="Search for restaurants or dishes..." id="searchInput">
+    <button onclick="filterRestaurants()"><i class="fas fa-search"></i></button>
+  </div>
+</div>
+<div class="container">
+  <div class="filters">
+    <div class="filter-chip active" onclick="filterBy(this,'all')">🍽️ All</div>
+    <div class="filter-chip" onclick="filterBy(this,'north indian')">🍛 North Indian</div>
+    <div class="filter-chip" onclick="filterBy(this,'south indian')">🥘 South Indian</div>
+    <div class="filter-chip" onclick="filterBy(this,'chinese')">🍜 Chinese</div>
+    <div class="filter-chip" onclick="filterBy(this,'pizza')">🍕 Pizza</div>
+    <div class="filter-chip" onclick="filterBy(this,'burger')">🍔 Burger</div>
+    <div class="filter-chip" onclick="filterBy(this,'biryani')">🍚 Biryani</div>
+  </div>
+  <h2 class="section-title">Restaurants near you</h2>
+  <div class="restaurants-grid" id="restaurantsGrid">
+    {% for r in restaurants %}
+    <a href="/restaurant/{{ r.pk }}/" class="restaurant-card" data-cuisine="{{ r.cuisine|lower }}">
+      <div class="card-img-placeholder">
+        {% if 'pizza' in r.cuisine|lower %}🍕
+        {% elif 'burger' in r.cuisine|lower %}🍔
+        {% elif 'chinese' in r.cuisine|lower %}🍜
+        {% elif 'south' in r.cuisine|lower %}🥘
+        {% elif 'biryani' in r.cuisine|lower %}🍚
+        {% else %}🍽️{% endif %}
+      </div>
+      <div class="card-body">
+        <div class="card-name">{{ r.name }}</div>
+        <div class="card-cuisine">{{ r.cuisine }}</div>
+        <div class="card-meta">
+          <span class="meta-badge rating">⭐ {{ r.rating }}</span>
+          <span class="meta-badge time">🕐 {{ r.delivery_time }}-{{ r.delivery_time|add:10 }} min</span>
+          <span class="meta-badge price">₹{{ r.min_order }} min</span>
+        </div>
+        {% if not r.is_open %}<span class="closed-badge">Closed</span>{% endif %}
+      </div>
+    </a>
+    {% empty %}
+    <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--gray);">
+      <div style="font-size:60px;margin-bottom:16px;">🍽️</div>
+      <p style="font-size:18px;font-weight:600;">No restaurants yet</p>
+      <p style="font-size:14px;">Add restaurants from <a href="/admin/" style="color:var(--red);">Admin Panel</a></p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function filterBy(el, cuisine) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.restaurant-card').forEach(card => {
+    card.style.display = (cuisine === 'all' || card.dataset.cuisine.includes(cuisine)) ? '' : 'none';
+  });
+}
+function filterRestaurants() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.restaurant-card').forEach(card => {
+    const name = card.querySelector('.card-name').textContent.toLowerCase();
+    const cuisine = card.querySelector('.card-cuisine').textContent.toLowerCase();
+    card.style.display = (name.includes(q) || cuisine.includes(q)) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

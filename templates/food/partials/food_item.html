@@ -1,0 +1,19 @@
+<div class="food-item">
+  <div class="food-info">
+    <div style="display:flex;align-items:center;margin-bottom:4px;">
+      {% if item.is_veg %}<span class="veg-badge"></span>{% else %}<span class="nonveg-badge"></span>{% endif %}
+      <span class="food-name">{{ item.name }}</span>
+    </div>
+    <div class="food-desc">{{ item.description }}</div>
+    <div class="food-price">₹{{ item.price }}</div>
+  </div>
+  <div style="margin-left:16px;">
+    <button class="add-btn" data-add="{{ item.pk }}"
+      onclick="addToCart('{{ item.pk }}','{{ item.name }}',{{ item.price }})">ADD</button>
+    <div class="qty-control" data-qty="{{ item.pk }}" style="display:none;">
+      <button class="qty-btn" onclick="removeFromCart('{{ item.pk }}')">−</button>
+      <span class="qty-num" data-num="{{ item.pk }}">1</span>
+      <button class="qty-btn" onclick="addToCart('{{ item.pk }}','{{ item.name }}',{{ item.price }})">+</button>
+    </div>
+  </div>
+</div>

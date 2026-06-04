@@ -1,0 +1,75 @@
+{% extends 'food/base.html' %}
+{% block title %}My Orders - Zomato{% endblock %}
+{% block extra_css %}
+<style>
+.orders-wrapper{max-width:800px;margin:30px auto;padding:0 20px;}
+.page-title{font-family:'Okra',sans-serif;font-size:26px;font-weight:800;margin-bottom:24px;}
+.order-card{background:#fff;border-radius:16px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;}
+.order-card-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);}
+.order-rest-name{font-family:'Okra',sans-serif;font-size:17px;font-weight:700;}
+.order-rest-meta{font-size:13px;color:var(--gray);margin-top:2px;}
+.status-badge{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;text-transform:uppercase;}
+.status-placed{background:#fff3cd;color:#856404;}
+.status-confirmed{background:#d1e7dd;color:#0f5132;}
+.status-preparing{background:#fff3cd;color:#856404;}
+.status-picked{background:#cfe2ff;color:#084298;}
+.status-delivered{background:#d1e7dd;color:#0f5132;}
+.status-cancelled{background:#f8d7da;color:#842029;}
+.order-card-body{padding:16px 20px;}
+.order-items-summary{font-size:14px;color:#555;margin-bottom:12px;}
+.order-footer{display:flex;align-items:center;justify-content:space-between;}
+.order-amount{font-size:16px;font-weight:700;}
+.order-date{font-size:12px;color:var(--gray);}
+.delivery-info{display:flex;align-items:center;gap:10px;background:#f8f8f8;border-radius:10px;padding:12px 16px;margin-top:12px;}
+.delivery-info .icon{font-size:24px;}
+.delivery-info .info-text .name{font-weight:700;font-size:14px;}
+.delivery-info .info-text .meta{font-size:12px;color:var(--gray);}
+.empty-orders{text-align:center;padding:80px 20px;color:var(--gray);}
+</style>
+{% endblock %}
+{% block content %}
+<div class="orders-wrapper">
+  <h1 class="page-title">My Orders</h1>
+  {% if orders %}
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-card-header">
+        <div>
+          <div class="order-rest-name">{{ order.restaurant.name }}</div>
+          <div class="order-rest-meta">Order #ZOM{{ order.id|stringformat:"05d" }} &bull; {{ order.restaurant.cuisine }}</div>
+        </div>
+        <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+      </div>
+      <div class="order-card-body">
+        <div class="order-items-summary">
+          {% for item in order.items.all %}{{ item.quantity }}× {{ item.food_item.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </div>
+        {% if order.delivery_person %}
+        <div class="delivery-info">
+          <div class="icon">🏍️</div>
+          <div class="info-text">
+            <div class="name">{{ order.delivery_person.name }}</div>
+            <div class="meta">{{ order.delivery_person.vehicle }} &bull; ⭐ {{ order.delivery_person.rating }} &bull; {{ order.delivery_person.phone }}</div>
+          </div>
+        </div>
+        {% endif %}
+        <div class="order-footer" style="margin-top:12px;">
+          <div>
+            <div class="order-amount">₹{{ order.total_amount }}</div>
+            <div class="order-date">{{ order.created_at|date:"d M Y, h:i A" }} &bull; {{ order.get_payment_method_display }}</div>
+          </div>
+          <div style="font-size:13px;color:var(--gray);">⏱ {{ order.estimated_delivery }} min delivery</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-orders">
+    <div style="font-size:64px;margin-bottom:16px;">🛵</div>
+    <p style="font-size:18px;font-weight:700;margin-bottom:8px;">No orders yet!</p>
+    <p style="font-size:14px;margin-bottom:24px;">Your order history will appear here</p>
+    <a href="/" style="padding:12px 28px;background:var(--red);color:#fff;border-radius:10px;font-weight:700;text-decoration:none;">Order Now</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

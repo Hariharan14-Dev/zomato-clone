@@ -1,0 +1,150 @@
+{% extends 'food/base.html' %}
+{% block title %}{{ restaurant.name }} - Zomato{% endblock %}
+{% block extra_css %}
+<style>
+.rest-hero{background:linear-gradient(135deg,#1c1c1c,#333);padding:40px 0;color:#fff;}
+.rest-info{display:flex;align-items:center;gap:24px;}
+.rest-icon{width:90px;height:90px;background:rgba(255,255,255,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:42px;}
+.rest-name{font-family:'Okra',sans-serif;font-size:30px;font-weight:800;margin-bottom:6px;}
+.rest-meta{display:flex;gap:20px;margin-top:10px;}
+.meta-pill{background:rgba(255,255,255,.15);padding:5px 14px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;}
+.menu-section{padding:30px 0;}
+.category-nav{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:8px;}
+.cat-btn{padding:8px 20px;border-radius:20px;border:2px solid var(--border);background:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;}
+.cat-btn:hover,.cat-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
+.cat-title{font-family:'Okra',sans-serif;font-size:20px;font-weight:700;margin:24px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--border);}
+.food-item{background:#fff;border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;box-shadow:var(--shadow);}
+.food-info{flex:1;}
+.veg-badge{display:inline-block;width:16px;height:16px;border:2px solid #1a9c3e;border-radius:3px;position:relative;margin-right:8px;}
+.veg-badge::after{content:'';width:8px;height:8px;background:#1a9c3e;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+.nonveg-badge{display:inline-block;width:16px;height:16px;border:2px solid #c0392b;border-radius:3px;position:relative;margin-right:8px;}
+.nonveg-badge::after{content:'';width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #c0392b;position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);}
+.food-name{font-weight:700;font-size:15px;margin-bottom:4px;}
+.food-desc{font-size:13px;color:var(--gray);margin-bottom:8px;line-height:1.5;}
+.food-price{font-size:15px;font-weight:700;color:var(--dark);}
+.add-btn{min-width:90px;padding:8px 20px;background:#fff;border:2px solid var(--red);color:var(--red);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;}
+.add-btn:hover{background:var(--red);color:#fff;}
+.qty-control{display:flex;align-items:center;gap:0;background:#fff;border:2px solid var(--red);border-radius:8px;overflow:hidden;}
+.qty-btn{width:32px;height:34px;background:var(--red);color:#fff;border:none;font-size:18px;cursor:pointer;font-weight:700;}
+.qty-num{width:32px;text-align:center;font-weight:700;color:var(--red);font-size:14px;}
+.cart-float{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:16px 36px;border-radius:50px;box-shadow:0 4px 24px rgba(226,55,68,.4);cursor:pointer;font-size:16px;font-weight:700;display:none;align-items:center;gap:12px;z-index:999;}
+.cart-float.show{display:flex;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="rest-hero">
+  <div class="container">
+    <div class="rest-info">
+      <div class="rest-icon">🍽️</div>
+      <div>
+        <h1 class="rest-name">{{ restaurant.name }}</h1>
+        <div style="color:rgba(255,255,255,.8);font-size:14px;">{{ restaurant.cuisine }} • {{ restaurant.address }}</div>
+        <div class="rest-meta">
+          <span class="meta-pill">⭐ {{ restaurant.rating }} Rating</span>
+          <span class="meta-pill">🕐 {{ restaurant.delivery_time }}-{{ restaurant.delivery_time|add:10 }} min</span>
+          <span class="meta-pill">₹{{ restaurant.min_order }} min order</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="menu-section">
+    <div class="category-nav">
+      {% if starters %}<button class="cat-btn active" onclick="scrollTo('starters',this)">Starters</button>{% endif %}
+      {% if mains %}<button class="cat-btn" onclick="scrollTo('mains',this)">Main Course</button>{% endif %}
+      {% if desserts %}<button class="cat-btn" onclick="scrollTo('desserts',this)">Desserts</button>{% endif %}
+      {% if beverages %}<button class="cat-btn" onclick="scrollTo('beverages',this)">Beverages</button>{% endif %}
+    </div>
+    {% if starters %}
+    <div id="starters"><h2 class="cat-title">🥗 Starters</h2>
+    {% for item in starters %}{% include 'food/partials/food_item.html' with item=item %}{% endfor %}
+    </div>{% endif %}
+    {% if mains %}
+    <div id="mains"><h2 class="cat-title">🍛 Main Course</h2>
+    {% for item in mains %}{% include 'food/partials/food_item.html' with item=item %}{% endfor %}
+    </div>{% endif %}
+    {% if desserts %}
+    <div id="desserts"><h2 class="cat-title">🍨 Desserts</h2>
+    {% for item in desserts %}{% include 'food/partials/food_item.html' with item=item %}{% endfor %}
+    </div>{% endif %}
+    {% if beverages %}
+    <div id="beverages"><h2 class="cat-title">🥤 Beverages</h2>
+    {% for item in beverages %}{% include 'food/partials/food_item.html' with item=item %}{% endfor %}
+    </div>{% endif %}
+  </div>
+</div>
+<div class="cart-float" id="cartFloat" onclick="goToCart()">
+  <i class="fas fa-shopping-cart"></i>
+  <span id="cartCount">0 items</span>
+  <span>|</span>
+  <span>View Cart →</span>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+let cart = JSON.parse(localStorage.getItem('zomato_cart') || '{}');
+updateCartFloat();
+
+function addToCart(itemId, itemName, price) {
+  if (!cart[itemId]) cart[itemId] = {name: itemName, price: price, qty: 0};
+  cart[itemId].qty++;
+  saveCart();
+  updateUI(itemId);
+  updateCartFloat();
+}
+
+function removeFromCart(itemId) {
+  if (cart[itemId] && cart[itemId].qty > 0) {
+    cart[itemId].qty--;
+    if (cart[itemId].qty === 0) delete cart[itemId];
+  }
+  saveCart();
+  updateUI(itemId);
+  updateCartFloat();
+}
+
+function updateUI(itemId) {
+  const qty = cart[itemId] ? cart[itemId].qty : 0;
+  const addBtn = document.querySelector(`[data-add="${itemId}"]`);
+  const qtyCtrl = document.querySelector(`[data-qty="${itemId}"]`);
+  const qtyNum = document.querySelector(`[data-num="${itemId}"]`);
+  if (addBtn && qtyCtrl) {
+    if (qty > 0) {
+      addBtn.style.display = 'none';
+      qtyCtrl.style.display = 'flex';
+      qtyNum.textContent = qty;
+    } else {
+      addBtn.style.display = 'block';
+      qtyCtrl.style.display = 'none';
+    }
+  }
+}
+
+function saveCart() { localStorage.setItem('zomato_cart', JSON.stringify(cart)); }
+
+function updateCartFloat() {
+  const total = Object.values(cart).reduce((s,i) => s + i.qty, 0);
+  const float = document.getElementById('cartFloat');
+  if (total > 0) {
+    float.classList.add('show');
+    document.getElementById('cartCount').textContent = `${total} item${total>1?'s':''}`;
+  } else {
+    float.classList.remove('show');
+  }
+}
+
+function goToCart() { window.location.href = '/cart/'; }
+function scrollTo(id, el) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Init UI for items already in cart
+document.querySelectorAll('[data-add]').forEach(btn => {
+  const id = btn.dataset.add;
+  if (cart[id] && cart[id].qty > 0) updateUI(id);
+});
+</script>
+{% endblock %}
