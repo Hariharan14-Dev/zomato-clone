@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # 🍕 Zomato Clone — Django Full Stack
 
@@ -49,3 +50,7 @@ zomato_clone/
 - **DeliveryPerson** — name, phone, vehicle, rating
 - **Order** — user, restaurant, delivery_person, status, payment_method, total, address
 - **OrderItem** — order, food_item, quantity, price
+=======
+# zomato-clone
+This is an clone zomato app
+>>>>>>> c0046fb (Initial commit)
