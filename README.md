@@ -14,35 +14,6 @@ A complete food delivery app clone built with Django.
 - ✅ Order History page
 - ✅ Django Admin Panel
 
-## Quick Setup
-
-```bash
-# 1. Install dependencies
-pip install django pillow
-
-# 2. Apply migrations
-python manage.py migrate
-
-# 3. Load sample data
-python manage.py seed_data
-
-# 4. Run the server
-python manage.py runserver
-```
-
-## Login Credentials
-| Role | Username | Password |
-|------|----------|----------|
-| Admin | admin | admin123 |
-| User | testuser | test123 |
-
-## URLs
-- Home: http://127.0.0.1:8000/
-- Login: http://127.0.0.1:8000/login/
-- Admin: http://127.0.0.1:8000/admin/
-- Cart: http://127.0.0.1:8000/cart/
-- My Orders: http://127.0.0.1:8000/my-orders/
-
 ## Project Structure
 ```
 zomato_clone/
